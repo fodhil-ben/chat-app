@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node backend/app.js",
     "server": "nodeman backend/app.js",
-    "build": "npm install && (cd frontend && npm install --legacy-peer-deps && npx vite build) && cd .."
+    "build": "npm install && (cd frontend && npm install --legacy-peer-deps && npx vite build)"
   },
   "keywords": [
     "chat-app"
