@@ -45,7 +45,8 @@ const useMessages = () => {
 
 
     useEffect(() => {
-        socketRef.current = io(BASE_URL)
+        // socketRef.current = io(BASE_URL)
+        socketRef.current = io("https://chat-app-nkac.onrender.com/")
         if (auth.user.id) socketRef.current.emit('setup', auth.user.id)
         return () => {
             socketRef.current.disconnect();

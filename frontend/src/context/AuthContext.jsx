@@ -16,7 +16,8 @@ export const AuthReducer = (state, action) => {
 }
 
 export default function AuthContextProvider({ children }) {
-    const BASE_URL = 'http://localhost:3001'
+    // const BASE_URL = 'http://localhost:3001'
+    const BASE_URL = ''
     const [auth, dispatch] = useReducer(AuthReducer, { user: null })
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'))
