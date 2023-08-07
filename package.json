@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node backend/app.js",
     "server": "nodeman backend/app.js",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "npm install && npm install --prefix ./frontend && npm run build --prefix ./frontend"
   },
   "keywords": [
     "chat-app"
