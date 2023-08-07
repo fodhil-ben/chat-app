@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#convo::-webkit-scrollbar,
+#users::-webkit-scrollbar,
+#elementsList::-webkit-scrollbar,
+#users_list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#users,
+#elementsList,
+#users_list {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+
+
+}
+
+@media (max-width:1024px) {
+    html {
+        font-size: 14px;
+    }
+
+}
+
+:root {
+    /* --secondary-color: #89ffd8;
+    --shadow-color: #c6ffec;
+    --main-color: #ddfef3;
+    --text-color: #6ccbab; */
+
+    --shadow-color: #9bafff;
+    --secondary-color: #c6d5ff;
+    --main-color: #eef1ff;
+    --text-color: #6d77e4;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body,
+.Icon {
+    color: var(--text-color);
+}
+
+#mobileSlide,
+footer,
+#home,
+#login,
+#sign,
+#chat,
+#addForm,
+#loginForm>button,
+#popup>button {
+    background-color: var(--main-color);
+}
+
+
+
+#card,
+#welcome,
+#signForm,
+input,
+#addForm>button,
+#PopupParent,
+#EditPopup,
+.searchedUser,
+#loginForm {
+    background-color: var(--secondary-color);
+}
+
+#searchedUsers,
+#loginform,
+#signform,
+input,
+#signform>button,
+#loginform>button {
+    outline: 0;
+    border: 0;
+    box-shadow: 0 0 5px 0px var(--shadow-color);
+}
+
+nav {
+    height: 70px;
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 10px 0px var(--shadow-color);
+}
+
+#editCard button,
+#card button,
+#welcome>button,
+#signForm>button,
+#loginForm>button,
+#users_list {
+    background-color: var(--shadow-color);
+}
+
+.error,
+#cancelIcon,
+#error,
+#deleteError {
+    border-color: #ee2e6e;
+    color: #ee2e6e;
+}
+
+.message,
+#message {
+    border-color: #60ebc6;
+    color: #60ebc6;
+}
+
+.msgLeft,
+.msgRight,
+.elements {
+    max-width: 110px;
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 5px 0px var(--shadow-color);
+}
+
+.slideElements {
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 5px 0px var(--shadow-color);
+}
+
+.elements {
+    background-color: var(--secondary-color);
+}
+
+@media (min-width: 600px) {
+
+    .msgLeft,
+    .msgRight,
+    .elements {
+        max-width: 300px;
+    }
+}
+
+@media (min-width: 1200px) {
+
+    .msgLeft,
+    .msgRight,
+    .elements {
+        max-width: 800px;
+    }
+}
+
+.msgLeft {
+    align-self: flex-start;
+
+}
+
+.msgRight {
+    align-self: flex-end;
+}
+
+#chat {
+
+    height: calc(100vh - 70px);
+}
+
+#elementsList {
+    height: calc(100vh - 160px);
+}
+
+@media (min-width:1000px) {
+    #elementsList {
+        height: calc(100vh - 70px);
+    }
+}
+
+#popup {
+    transform: translateY(-50%);
+}
+
+#users_list,
+#popupError {
+    top: 15%
+}
+
+#EditPopup {
+    background-color: var(--main-color);
+}
+
+#editCard {
+    background-color: var(--secondary-color);
+}
