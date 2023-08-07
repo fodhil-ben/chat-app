@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node backend/app.js",
     "server": "nodeman backend/app.js",
-    "build": "npm install && npm install --prefix frontend && npx vite build --prefix frontend"
+    "build": "npm_config_yes=true npm install && npm install --prefix frontend && npx vite build --prefix frontend"
   },
   "keywords": [
     "chat-app"
