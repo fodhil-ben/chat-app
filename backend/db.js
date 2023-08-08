@@ -25,7 +25,7 @@ module.exports = client
 //messages => msg_id p key, sender_id f key=> users(id), group_id f key=> users(id), message, created_at
 
 
-// create table messages(message_id serial primary key, sender_id int references users(id), group_id int references groups(group_id) ON DELETE CASCADE;, message varchar(255), created_at timestamp);
+// create table messages(message_id serial primary key, sender_id int references users(id), group_id int references groups(group_id) ON DELETE CASCADE, message varchar(255), created_at timestamp);
 
 // create table users(id serial primary key, username varchar(60), email varchar (60), password varchar(60));
-// create table groups(group_id serial primary key, owner integer references users(id), group_name varchar(60)), group_members INTEGER[] ;
+// create table groups(group_id serial primary key, owner integer references users(id), group_name varchar(60), group_members INTEGER[]) ;
