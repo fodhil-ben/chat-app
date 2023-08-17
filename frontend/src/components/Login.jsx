@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { BiHide } from 'react-icons/bi'
 import { useLogin } from '../hooks/useLogin'
+import ProcessingButton from './uiComponents/ProcessingButton'
 function Login() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [show, setShow] = useState(false)
-    const { login, message, error } = useLogin()
+    const { login, message, error, isLoading } = useLogin()
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -23,7 +24,9 @@ function Login() {
                     <label className='px-1 self-start font-bold '>Password </label>
                     <div onClick={() => setShow(!show)} className='pr-3'><BiHide className='cursor-pointer' /></div>                    </div>
                 <input type={show ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password} name="password" className='px-5 py-2 rounded-2xl outline-0 w-full' />
-                <button type="submit" onClick={handleClick} className='my-5 tracking-wide text-center py-3 rounded-2xl outline-0 w-2/4'>Login</button>
+                {!isLoading && <button type="submit" onClick={handleClick} className='my-5 tracking-wide text-center py-3 rounded-2xl outline-0 w-2/4'>Login</button>}
+                {isLoading && <ProcessingButton />}
+
                 {error && <div id='error' className='text-red w-3/4 rounded-md border-2 border-solid p-5'>{error}</div>}
                 {message && <div id='message' className='text-red w-3/4 rounded-md border-2 border-solid p-5'>{message}</div>}
             </form>

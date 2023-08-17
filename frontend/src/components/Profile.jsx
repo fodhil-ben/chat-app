@@ -12,7 +12,7 @@ function Profile() {
         setType(type)
     }
     return (
-        <div>
+        <div id='profile' className='h-screen'>
             <h1 className='font-bold text-5xl pt-10 text-center'>Profile</h1>
             <div id="card" className='w-3/4 m-auto mt-12 text-2xl p-5 font-bold rounded-lg flex flex-col gap-5'>
                 <p className='flex gap-5 items-center justify-between '>

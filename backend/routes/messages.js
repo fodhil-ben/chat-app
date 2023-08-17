@@ -31,6 +31,7 @@ router.post('/', (req, res) => {
             console.log('Error creating message !!')
             return res.status(500).json({ message: 'Internal Server Error !!' })
         } else {
+            // console.log()
             return res.json({ message: result.rows[0] })
         }
     })

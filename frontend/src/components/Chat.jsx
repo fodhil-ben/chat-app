@@ -17,9 +17,9 @@ export default function Chat() {
 
                 {!chatSelected === true &&
                     <>
-                        <MobileSlide users={users} name={'Groups'} chatSelected={chatSelected} setChatSelected={setChatSelected} />
-                        <Sidebar users={users} name={'Groups'} chatSelected={chatSelected} setChatSelected={setChatSelected} />
-                        <Menu users={users} />
+                        <MobileSlide users={users} chatSelected={chatSelected} setChatSelected={setChatSelected} />
+                        <Sidebar users={users} chatSelected={chatSelected} setChatSelected={setChatSelected} />
+                        <Menu users={users} chatSelected={chatSelected} setChatSelected={setChatSelected} />
 
                     </>
                 }
@@ -28,7 +28,7 @@ export default function Chat() {
                     <>
                         <MobileSlide name={'Members'} chatSelected={chatSelected} setChatSelected={setChatSelected} />
                         <Sidebar name={'Members'} chatSelected={chatSelected} setChatSelected={setChatSelected} />
-                        <Conversation />
+                        <Conversation chatSelected={chatSelected} setChatSelected={setChatSelected} />
                     </>
                 }
             </div>

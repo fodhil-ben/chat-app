@@ -1,20 +1,25 @@
 const { Client } = require('pg')
-// require('dotenv').config()
 const dotenv = require("dotenv");
 dotenv.config();
 
-const client = new Client({
-    connectionString: process.env.POSTGRES_URL + "?sslmode=require",
-})
-// console.log(process.env)
-// console.log(process.env.DB_HOST)
-// const client = new Client({
-//     user: process.env.DB_USER,
-//     host: process.env.DB_HOST,
-//     database: process.env.DATABASE,
-//     password: process.env.DB_PASSWORD,
-//     port: process.env.DB_PORT
-// })
+if (process.env.NODE_ENV === 'production') {
+
+    const client = new Client({
+        connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+    })
+}
+else {
+    const client = new Client({
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,
+        database: process.env.DATABASE,
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT
+    })
+
+}
+
+
 
 module.exports = client
 

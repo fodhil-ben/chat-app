@@ -1,61 +1,34 @@
-import { AiFillDelete } from "react-icons/ai"
-import { RiEdit2Fill } from "react-icons/ri"
-import { VscAdd } from "react-icons/vsc"
+
 import { RxExit } from "react-icons/rx"
 import { IconContext } from "react-icons";
 import { useState, useEffect, useContext } from "react"
 import Popup from "./Popup"
-import useGroups from '../..//hooks/useGroups'
 import { AuthenticationContext } from "../../context/AuthContext";
 import { GroupsContext } from "../../context/GroupsContext";
 import { UsersContext } from "../../context/UsersContext";
 import { GiCancel } from "react-icons/gi";
-import Confirmation from "./Confirmation";
-import EditGroup from "./EditGroup";
+import useGroups from "../../hooks/useGroups";
+import { VscAdd } from "react-icons/vsc"
+import AddUser from "./AddUser";
+
+
 
 
 function Sidebar({ name, chatSelected, setChatSelected }) {
-    const [showPopup, setShowPopup] = useState(false)
-    const { groups, getGroups, deleteError, setDeleteError } = useGroups()
     const { auth } = useContext(AuthenticationContext)
-    const { setActiveGroup, activeGroup } = useContext(GroupsContext)
     const { users } = useContext(UsersContext)
     const [members, setMembers] = useState([])
-    const [confirmation, setConfirmation] = useState(false)
-    const [deletedGroup, setDeletedGroup] = useState(null)
-    const [editedGroup, setEditedGroup] = useState(null)
-    const [edit, setEdit] = useState(false)
+    const [addUser, setAddUser] = useState(false)
+    const { setActiveGroup, activeGroup } = useContext(GroupsContext)
 
-    useEffect(() => {
-        getGroups()
-    }, [groups, getGroups])
+    const [searchedUsers, setSearchedUsers] = useState(users)
+    const { groups, getGroups, deleteError, setDeleteError } = useGroups()
+    const [search, setSearch] = useState('')
 
-    const handleEditIcon = (e, g) => {
-        e.stopPropagation()
-        setEdit(true)
-        setEditedGroup(g)
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
     }
-
-    const handleDeleteIcon = (e, g) => {
-        e.stopPropagation()
-        setConfirmation(true)
-        setDeletedGroup(g)
-    }
-    const handleExit = () => {
-        setChatSelected(!chatSelected)
-        setActiveGroup(null)
-    }
-
-    const handleGroup = (g) => {
-        setChatSelected(!chatSelected)
-        setActiveGroup(g.group_id)
-
-    }
-    useEffect(() => {
-        localStorage.setItem('chatIsSelected', chatSelected)
-        localStorage.setItem('activeGroup', activeGroup)
-    }, [chatSelected, activeGroup])
-
     useEffect(() => {
         var realMembers = []
         groups.map(e => {
@@ -77,43 +50,40 @@ function Sidebar({ name, chatSelected, setChatSelected }) {
         setMembers(storedMembers);
     }, []);
 
-    return (
-        <div id="sidebar" className='hidden md:flex flex-col flex-grow border-r pr-3 border-r-white' >
-            <header className='border-b border-b-white border-b-solid pr-2 pb-1'>
-                <h1 className='font-bold text-2xl pt-3 pb-1 pl-1 tracking-wide'>
-                    {name}
-                </h1>
-                {name === "Members"
-                    ? <IconContext.Provider value={{ className: "Icon text-2xl text-white  tracking-wide cursor-pointer" }}>
-                        <div className='flex justify-end pb-2'>
-                            <RxExit onClick={handleExit} />
-                        </div>
-                    </IconContext.Provider>
-                    : <IconContext.Provider value={{ className: "Icon text-2xl text-white  tracking-wide cursor-pointer" }}>
-                        <div className='flex justify-end pb-2'>
-                            <VscAdd onClick={() => setShowPopup(true)} />
-                        </div>
-                    </IconContext.Provider>
-                }
+    useEffect(() => {
+        const searched = users.filter((e) => { return e.username.startsWith(search) && search.length > 0 })
+        setSearchedUsers(searched)
+    }, [search, users])
 
+    return (
+        <div id="sidebar" className='hidden md:flex flex-col flex-grow border-r p-3 border-r-white' >
+            <header className='border-b border-b-white border-b-solid p-2'>
+                {name === 'Members' && <div className="pb-3 pt-2 flex justify-between items-center">
+                    <h1 className="text-3xl font-bold ">{name}</h1>
+                    <IconContext.Provider value={{ className: "Icon text-3xl text-white  tracking-wide cursor-pointer" }}>
+                        <VscAdd onClick={() => setAddUser(true)} />
+                    </IconContext.Provider></div>}
+                {name !== "Members" &&
+                    <form onSubmit={(e) => { handleSubmit(e) }} className='flex justify-between pr-9 md:pr-3'>
+                        <input value={search} type="text" onChange={(e) => { setSearch(e.target.value) }} placeholder='Search a person ...' className='p-4 rounded-2xl w-3/4 flex-grow outline-0' />
+                    </form>
+
+                }
             </header>
+
             <div id='elementsList' className='flex flex-grow flex-col gap-5 py-5 pr-3 pl-2 overflow-y-scroll'>
-                {(groups && name === 'Groups') && groups.map((g, i) => {
-                    return (<div key={i} onClick={() => handleGroup(g)} className='bg-red-200 cursor-pointer elements z-10 text-left text-xl tracking-wide rounded-2xl font-bold shadow-md p-3 w-max-full'>
-                        <div className="break-words inline"> {g.group_name} </div>
-                        <div id="make_changes" className="flex gap-3 m-auto justify-end ">
-                            <RiEdit2Fill onClick={(e) => { handleEditIcon(e, g) }} className="cursor-pointer z-20" />
-                            <AiFillDelete onClick={(e) => { handleDeleteIcon(e, g) }} className="cursor-pointer z-20" />
-                        </div>
-                    </div>)
-                })}
-                {deleteError &&
-                    <div id='deleteError' className="font-bold text-2xl flex items-center cursor-pointer">
-                        {deleteError}
-                        <IconContext.Provider value={{ id: 'cancelIcon', className: 'font-bold text-4xl' }}>
-                            <GiCancel onClick={() => setDeleteError(null)} />
-                        </IconContext.Provider>
-                    </div>}
+                {name === 'Members' && < div className='w-full cursor-pointer elements z-10 text-left text-xl tracking-wide rounded-2xl font-bold shadow-md p-3 w-max-full'>
+                    <div className="break-words inline"> You </div>
+                    <div id="make_changes" className="flex gap-3 m-auto justify-end ">
+                    </div>
+                </div>}
+                {searchedUsers.length > 0 && <div id="users" className='m-auto w-full flex flex-col gap-4 py-3 rounded-2xl overflow-scroll h-full'>
+                    {searchedUsers.length > 0 && searchedUsers.map((e, i) => {
+                        return (<div id='searchedUsers' className='searchedUser rounded-2xl p-2 pl-3 font-bold text-lg' key={i} >{e.username}</div>)
+                    })}
+                </div>}
+
+
                 {name === 'Members' && members.map((e, i) => {
                     return (<div key={i} className='cursor-pointer elements z-10 text-left text-xl tracking-wide rounded-2xl font-bold shadow-md p-3 w-max-full'>
                         <div className="break-words inline"> {e} </div>
@@ -122,11 +92,8 @@ function Sidebar({ name, chatSelected, setChatSelected }) {
                     </div>)
                 })}
             </div>
-            {showPopup && (
-                <Popup setShowPopup={setShowPopup} users={users} />
-            )}
-            {confirmation && <Confirmation setConfirmation={setConfirmation} deletedGroup={deletedGroup} />}
-            {edit && <EditGroup setEdit={setEdit} setEditedGroup={setEditedGroup} editedGroup={editedGroup} />}
+            {addUser && <AddUser setAddUser={setAddUser} />}
+
         </div >
     )
 }

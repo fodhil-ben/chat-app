@@ -12,10 +12,12 @@ import { UsersContext } from "../../context/UsersContext";
 import { GiCancel } from "react-icons/gi";
 import Confirmation from "./Confirmation";
 import EditGroup from "./EditGroup";
+import AddUser from "./AddUser";
 
 
 function MobileSlide({ name, chatSelected, setChatSelected }) {
     const [showPopup, setShowPopup] = useState(false)
+    const [addUser, setAddUser] = useState(false)
     const { deleteError, setDeleteError } = useGroups()
     const { auth } = useContext(AuthenticationContext)
     const { groups, setActiveGroup, activeGroup } = useContext(GroupsContext)
@@ -26,6 +28,9 @@ function MobileSlide({ name, chatSelected, setChatSelected }) {
     const [editedGroup, setEditedGroup] = useState(null)
     const [edit, setEdit] = useState(false)
     const [ShowSidebar, setShowSidebar] = useState(false)
+    const [searchedUsers, setSearchedUsers] = useState(users)
+    const [search, setSearch] = useState('')
+
 
     const handleEditIcon = (e, g) => {
         e.stopPropagation()
@@ -76,44 +81,42 @@ function MobileSlide({ name, chatSelected, setChatSelected }) {
 
     return (
         <>
-            <button onClick={() => setShowSidebar(!ShowSidebar)} className="absolute right-2 top-28 font-bold text-5xl pr-2 md:hidden"><AiOutlineMenu></AiOutlineMenu></button>
-            <div id="mobileSlide" className={ShowSidebar ? 'flex md:hidden  flex-col flex-grow border-r pr-3  border-r-white z-40 w-full absolute left-0' : ' md:hidden hidden flex-col flex-grow border-r pr-3 border-r-white z-40 w-11/12 absolute left-0'}>
-                <header className='border-b border-b-white border-b-solid pr-2 pb-1'>
-                    <h1 className='flex justify-between items-center font-bold text-2xl pt-3 pb-1 pl-5 tracking-wide'>
-                        {name}
-                        <GiCancel className="text-2xl" onClick={() => setShowSidebar(false)} />
-                    </h1>
-                    {name === "Members"
-                        ? <IconContext.Provider value={{ className: "Icon text-2xl text-white  tracking-wide cursor-pointer" }}>
-                            <div className='flex justify-end pb-2'>
-                                <RxExit onClick={handleExit} />
-                            </div>
-                        </IconContext.Provider>
-                        : <IconContext.Provider value={{ className: "Icon text-2xl text-white  tracking-wide cursor-pointer" }}>
-                            <div className='flex justify-end pb-2'>
-                                <VscAdd onClick={() => setShowPopup(true)} />
-                            </div>
-                        </IconContext.Provider>
+            <button onClick={() => setShowSidebar(!ShowSidebar)} className="absolute left- top-5 z-50 font-bold text-5xl pr-2 md:hidden"><AiOutlineMenu></AiOutlineMenu></button>
+            <div id="mobileSlide" className={ShowSidebar ? 'flex md:hidden pt-3 flex-col flex-grow border-r px-2 border-r-white z-40 w-full absolute left-0' : ' md:hidden hidden flex-col flex-grow border-r px-2 pt-3 border-r-white z-40 w-11/12 absolute left-0'}>
+                <header className='border-b border-b-white border-b-solid p-2 pb-1 flex items-center'>
+                    {!chatSelected
+                        &&
+                        <form onSubmit={(e) => { handleSubmit(e) }} className='flex justify-between md:pr-3 pb-2 flex-grow'>
+                            <input value={search} type="text" onChange={(e) => { setSearch(e.target.value) }} placeholder='Search a person ...' className='p-4 rounded-2xl w-3/4 flex-grow outline-0' />
+                        </form>
                     }
+                    <h1 className='flex w-full justify-between items-center font-bold text-2xl pb-3 px-5 tracking-wide'>
+                        {name}
+                        <div className="flex flex-col gap-2">
+                            <IconContext.Provider value={{ className: "Icon text-2xl text-white  tracking-wide cursor-pointer" }}>
+                                <VscAdd onClick={() => setAddUser(true)} />
+                            </IconContext.Provider>
+                            <GiCancel className="text-2xl" onClick={() => setShowSidebar(false)} />
+                        </div>
+                    </h1>
+
+
 
                 </header>
                 <div id='elementsList' className='flex flex-grow flex-col gap-5 p-5 overflow-y-scroll'>
-                    {(groups && name === 'Groups') && groups.map((g, i) => {
-                        return (<div key={i} onClick={() => handleGroup(g)} className='w-full cursor-pointer slideElements z-10 text-left text-xl tracking-wide rounded-2xl font-bold shadow-md p-3 w-max-full'>
-                            <div className="break-words inline"> {g.group_name} </div>
-                            <div id="make_changes" className="flex gap-3 m-auto justify-end ">
-                                <RiEdit2Fill onClick={(e) => { handleEditIcon(e, g) }} className="cursor-pointer z-20" />
-                                <AiFillDelete onClick={(e) => { handleDeleteIcon(e, g) }} className="cursor-pointer z-20" />
-                            </div>
-                        </div>)
-                    })}
-                    {deleteError &&
-                        <div id='deleteError' className="font-bold text-2xl flex items-center cursor-pointer">
-                            {deleteError}
-                            <IconContext.Provider value={{ id: 'cancelIcon', className: 'font-bold text-4xl' }}>
-                                <GiCancel onClick={() => setDeleteError(null)} />
-                            </IconContext.Provider>
-                        </div>}
+                    <div className='w-full cursor-pointer slideElements z-10 text-left text-xl tracking-wide rounded-2xl font-bold shadow-md p-3 w-max-full'>
+                        <div className="break-words inline"> You </div>
+                        <div id="make_changes" className="flex gap-3 m-auto justify-end ">
+                        </div>
+                    </div>
+
+                    {!chatSelected && searchedUsers.length > 0 && <div id="users" className='m-auto w-full flex flex-col gap-4 p-5 rounded-2xl overflow-scroll h-full'>
+                        {searchedUsers.length > 0 && searchedUsers.map((e, i) => {
+                            return (<div id='searchedUsers' className='searchedUser rounded-2xl p-2 pl-3 font-bold text-lg' key={i} >{e.username}</div>)
+                        })}
+                    </div>}
+
+
                     {name === 'Members' && members.map((e, i) => {
                         return (<div key={i} className='w-full cursor-pointer slideElements z-10 text-left text-xl tracking-wide rounded-2xl font-bold shadow-md p-3 w-max-full'>
                             <div className="break-words inline"> {e} </div>
@@ -127,6 +130,7 @@ function MobileSlide({ name, chatSelected, setChatSelected }) {
                 )}
                 {confirmation && <Confirmation setConfirmation={setConfirmation} deletedGroup={deletedGroup} />}
                 {edit && <EditGroup setEdit={setEdit} setEditedGroup={setEditedGroup} editedGroup={editedGroup} />}
+                {addUser && <AddUser setAddUser={setAddUser} />}
             </div >
         </>
     )

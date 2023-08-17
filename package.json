@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node backend/app.js",
-    "server": "nodeman backend/app.js",
+    "dev": "nodemon backend/app.js",
     "build": "npm install && npm install --prefix frontend"
   },
   "keywords": [
@@ -23,6 +23,7 @@
     "express-jwt": "^8.4.1",
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.1",
+    "nodeman": "^1.1.2",
     "pg": "^8.11.1",
     "socket.io": "^4.7.1"
   }

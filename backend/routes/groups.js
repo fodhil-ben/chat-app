@@ -30,23 +30,23 @@ router.post('/', (req, res) => {
     const { id } = jwt.verify(token, process.env.SECRET_KEY)
     if (!id || !group_name || !group_members || !Array.isArray(group_members)) {
         console.log('Error: User does n')
-        return res.status(400).json({ message: 'Parameter Missing !!' })
+        return res.status(400).json({ messageError: 'Parameter Missing !!' })
     }
     values = [... new Set(group_members)]
     areAllIntegers = values.every(value => Number.isInteger(value, 10));
     if (!areAllIntegers || values.length === 0) {
         console.log('Error: User does not exi')
-        return res.status(400).json({ message: "Parameter Error !!!" })
+        return res.status(400).json({ messageError: "Parameter Error !!!" })
     }
     sqlQuery = `select id from users where id in (${values});`
     db.query(sqlQuery, (error, result) => {
         if (error) {
             console.log('Error creating group !')
             console.log(sqlQuery)
-            return res.status(500).json({ message: 'Internal Server Error !!', error })
+            return res.status(501).json({ message: 'Internal Server Error !!', error })
         } else if (result.rows.length !== values.length) {
             console.log('Error: User does not exists !!')
-            return res.status(400).json({ message: 'Error: User does not exists !!' })
+            return res.status(400).json({ messageError: 'Error: User does not exists !!' })
         }
         else {
             sqlQuery = 'select group_id from groups where group_name = $1'
@@ -54,9 +54,10 @@ router.post('/', (req, res) => {
                 if (error) {
                     console.log(sqlQuery)
                     console.log('Error creating group !!', error)
-                    res.status(500).json({ message: 'Internal Server Error !!' })
+                    res.status(502).json({ message: 'Internal Server Error !!' })
                 } else if (result.rows.length !== 0) {
-                    res.status(403).json({ message: 'group already exist !' })
+                    console.log('group already exists')
+                    res.status(403).json({ messageError: 'group already exist !' })
                 } else {
                     sqlQuery = 'insert into groups (group_name, group_members, owner) values ($1, $2, $3) returning *'
 
@@ -64,7 +65,7 @@ router.post('/', (req, res) => {
                         if (error) {
                             console.log(sqlQuery)
                             console.log('Error creating group !!!', error)
-                            res.status(500).json({ message: 'Internal Server Error !!' })
+                            res.status(503).json({ message: 'Internal Server Error !!' })
                         } else {
                             res.json({ message: 'Group created Successfully !', group: result.rows })
                         }
@@ -90,11 +91,11 @@ router.delete('/', (req, res) => {
             console.log('Error getting group !')
             return res.status(500).json({ message: 'Internal Server Error !!' })
         } else if (result.rows.length === 0) {
-            return res.status(403).json({ message: 'group does not exist !' })
+            return res.status(403).json({ messageError: 'group does not exist !' })
         } else if (!result.rows[0].group_members.includes(id)) {
-            return res.status(403).json({ errorMessage: 'Unauthorized: You are not member in this group !!' })
+            return res.status(403).json({ messageError: 'Unauthorized: You are not member in this group !!' })
         } else if (result.rows[0].owner !== id) {
-            return res.status(403).json({ errorMessage: 'Unauthorized: You are not the owner of this group !!' })
+            return res.status(403).json({ messageError: 'Unauthorized: You are not the owner of this group !!' })
 
         } else {
             sqlQuery = 'delete from groups where group_id = $1 and group_name = $2;'
@@ -119,7 +120,7 @@ router.put('/', (req, res) => {
     const token = authorization.split(' ')[1]
     const { id } = jwt.verify(token, process.env.SECRET_KEY)
     if (!id || !group_id || !group_name || !oldGroup_name) {
-        return res.status(404).json({ errorMessage: 'Parameter Missing !!' })
+        return res.status(404).json({ messageError: 'Parameter Missing !!' })
     }
     //check if is member
     sqlQuery = 'select group_id, group_members from groups where group_id = $1 and group_name=$2;'
@@ -133,7 +134,7 @@ router.put('/', (req, res) => {
         }
         else if (result.rows.length !== 0) {
             console.log(sqlQuery2, oldGroup_name)
-            return res.status(403).json({ errorMessage: 'group already exist !' })
+            return res.status(403).json({ messageError: 'group already exist !' })
         } else {
             db.query(sqlQuery, [group_id, oldGroup_name], (error, result) => {
                 if (error) {
@@ -143,10 +144,10 @@ router.put('/', (req, res) => {
                 }
                 else if (result.rows.length === 0) {
                     console.log(sqlQuery, [group_id], 'does not exist')
-                    return res.status(403).json({ errorMessage: 'group does not exist !' })
+                    return res.status(403).json({ messageError: 'group does not exist !' })
                 }
                 else if (!result.rows[0].group_members.includes(id)) {
-                    return res.status(403).json({ errorMessage: 'Unauthorized: You are not member in this group !!' })
+                    return res.status(403).json({ messageError: 'Unauthorized: You are not member in this group !!' })
                 } else {
 
                     sqlQuery = 'update groups set group_name = $1 where group_id = $2 returning (group_name, group_members, owner);'
@@ -156,7 +157,7 @@ router.put('/', (req, res) => {
                             return res.status(500).json({ message: 'Internal Server Error !!' })
                         }
                         else {
-                            return res.json({ message: 'Group edited Successfully !', group: result.rows })
+                            return res.json({ message: 'Group edited Successfully !', group: result.rows[0] })
                         }
                     })
                 }
@@ -164,8 +165,53 @@ router.put('/', (req, res) => {
             })
         }
     })
+})
 
+router.put('/add_user', (req, res) => {
+    const { newUserId, group_id } = req.body
+    token = req.headers.authorization.split(' ')[1]
+    const { id } = jwt.verify(token, process.env.SECRET_KEY)
+    if (!id || !newUserId || !group_id || isNaN(newUserId)) {
+        console.log(id, newUserId, group_id)
+        return res.status(404).json({ messageError: 'Missing Parameter !!' })
+    }
+    sqlQuery = 'select group_members from groups where group_id = $1'
+    db.query(sqlQuery, [group_id], (error, result) => {
+        if (error) {
+            console.log(sqlQuery2)
+            console.log('Error getting group !!!')
+            return res.status(500).json({ message: 'Internal Server Error !!' })
+        } else if (result.rowCount === 0) {
+            return res.status(404).json({ messageError: 'group does not exist !!' })
+        } else if (!result.rows[0].group_members.includes(id)) {
+            return res.status(403).json({ messageError: 'Unauthorized: You are not member in this group !!' })
+        } else if (result.rows[0].group_members.includes(newUserId)) {
+            return res.status(404).json({ messageError: 'User Already in groups !' })
+        } else {
+            sqlQuery = 'select id from users where id = $1'
+            db.query(sqlQuery, [newUserId], (error, result) => {
+                if (error) {
+                    console.log(error)
+                    console.log('Error adding group !!!')
+                    return res.status(500).json({ message: 'Internal Server Error !!' })
+                } else if (result.rowCount === 0) {
+                    res.status(404).json({ messageError: 'User does not exist !' })
+                } else {
+                    sqlQuery = 'update groups set group_members = array_append(group_members, $1) where group_id = $2 returning (group_name, group_members, owner);'
+                    db.query(sqlQuery, [newUserId, group_id], (error, result) => {
+                        if (error) {
+                            console.log(sqlQuery2)
+                            console.log('Error adding group !!!')
+                            return res.status(500).json({ message: 'Internal Server Error !!' })
+                        } else {
+                            return res.json({ message: 'user added successfully', group: result.rows[0] })
+                        }
+                    })
 
+                }
+            })
+        }
+    })
 
 })
 

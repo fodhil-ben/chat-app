@@ -6,11 +6,14 @@ import { GroupsContext } from '../../context/GroupsContext'
 import { MessagesContext } from '../../context/MessagesContext'
 import { formatRelative, subDays } from 'date-fns'
 import { IconContext } from 'react-icons'
+import { RxExit } from 'react-icons/rx'
+import useGroups from '../../hooks/useGroups'
 
-function Conversation() {
+function Conversation({ chatSelected, setChatSelected }) {
     const targeRef = useRef(null)
     const { auth } = useContext(AuthenticationContext)
-    const { activeGroup, groups } = useContext(GroupsContext)
+    const { activeGroup, setActiveGroup } = useContext(GroupsContext)
+    const { groups, getGroups, isLoading } = useGroups()
     const [selectedGroup, setSelectedGroup] = useState('')
     const [SubmitMessages, setSubmitMessage] = useState(false)
     const { messages } = useContext(MessagesContext)
@@ -20,6 +23,14 @@ function Conversation() {
         e.preventDefault()
         handleSendMsg()
     }
+
+
+    const handleExit = () => {
+        setChatSelected(!chatSelected)
+        setActiveGroup(null)
+    }
+
+
     const handleSendMsg = () => {
         setSubmitMessage(true)
         createMessage(auth.user.id, activeGroup, message)
@@ -32,15 +43,22 @@ function Conversation() {
     }, [messages])
 
     useEffect(() => {
+        getGroups()
         groups.map(e => {
             if (e.group_id === activeGroup) setSelectedGroup(e.group_name)
         })
     }, [activeGroup, groups])
+
     return (
         <div id="Conversation" className='flex flex-col flex-grow md:flex-grow-0  w-2/3 p-5 '>
-            <div id="chatInfo" className='flex p-3 pt-0 justify-between border-b border-b-solid border-b-white'>
-                <div id="friendInfo" className='font-bold text-2xl pb-5'>
+            <div id="chatInfo" className='flex flex-col p-3 pt-0 justify-between border-b border-b-solid border-b-white'>
+                <div id="friendInfo" className='font-bold text-3xl flex  justify-between items-center p-2'>
                     <p>{selectedGroup}</p>
+                    <IconContext.Provider value={{ className: "Icon text-3xl text-white  tracking-wide cursor-pointer" }}>
+                        <div className='flex justify-end'>
+                            <RxExit onClick={handleExit} />
+                        </div>
+                    </IconContext.Provider>
                 </div>
             </div>
             <div id="convo" ref={targeRef} className='flex flex-grow flex-col gap-5 py-5 px-2 overflow-y-scroll'>
@@ -54,7 +72,7 @@ function Conversation() {
             <form onSubmit={(e) => { handleSubmit(e) }} className='flex justify-between gap-1'>
                 <input value={message} type="text" maxLength={255} onChange={(e) => { setMessage(e.target.value) }} placeholder='Type a message...' className='p-4 rounded-2xl w-3/4 flex-grow outline-0' />
                 <button className='text-2xl' onClick={handleSendMsg}>
-                    <IconContext.Provider value={{ className: 'text-4xl' }}>
+                    <IconContext.Provider value={{ className: 'text-5xl' }}>
                         <AiOutlineSend />
                     </IconContext.Provider>
                 </button>

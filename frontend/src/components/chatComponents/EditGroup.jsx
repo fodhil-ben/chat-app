@@ -1,13 +1,14 @@
 import { GiCancel, GiConfirmed } from 'react-icons/gi'
 import useGroups from '../../hooks/useGroups'
 import { useState } from 'react'
+import ProcessingButton from '../uiComponents/ProcessingButton'
 
 
 function EditGroup({ editedGroup, setEdit }) {
 
     const [oldValue, setOldValue] = useState('')
     const [newValue, setNewValue] = useState('')
-    const { editGroup, error, message, setError, setMessage } = useGroups()
+    const { editGroup, error, message, setError, setMessage, isLoading } = useGroups()
     const handleEdit = () => {
         setError(null)
         setMessage(null)
@@ -29,14 +30,15 @@ function EditGroup({ editedGroup, setEdit }) {
                     <input value={newValue} onChange={(e) => { setNewValue(e.target.value) }} className='rounded-lg p-2' />
                 </div>
                 <div className='flex flex-col justify-center gap-5'>
-                    <button onClick={handleEdit} className='flex items-center gap-10 rounded-2xl py-2 w-fit px-5 m-auto font-bold text-2xl'>
+                    {!isLoading && <button onClick={handleEdit} className='flex items-center gap-10 rounded-2xl py-2 w-fit px-5 m-auto font-bold text-2xl'>
                         Confirm
                         <GiConfirmed></GiConfirmed>
-                    </button>
-                    <button onClick={cancelEdit} className='flex items-center gap-10 rounded-2xl py-2 w-fit px-5 m-auto font-bold text-2xl'>
+                    </button>}
+                    {isLoading && <ProcessingButton />}
+                    {!isLoading && <button onClick={cancelEdit} className='flex items-center gap-10 rounded-2xl py-2 w-fit px-5 m-auto font-bold text-2xl'>
                         Cancel
                         <GiCancel></GiCancel>
-                    </button>
+                    </button>}
                 </div>
             </div>
             {error && <div id='error' className='relative top-1/4 m-auto mt-10 text-red w-3/4 rounded-md border-2 font-bold p-5'>{error}</div>}

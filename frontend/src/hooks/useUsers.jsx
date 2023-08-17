@@ -9,7 +9,10 @@ const useUsers = () => {
     const { setUsers } = useContext(UsersContext)
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+
     const getUsers = useCallback(async () => {
+        setIsLoading(true)
         const response = await fetch(`${BASE_URL}/api/users`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -18,9 +21,11 @@ const useUsers = () => {
         })
         const json = await response.json()
         setUsers(json.users)
-    }, [BASE_URL, auth, navigate, setUsers])
+        setIsLoading(false)
+    }, [BASE_URL, auth, setUsers])
 
     const editUsername = async (oldUsername, username) => {
+        setIsLoading(true)
         const response = await fetch(`${BASE_URL}/api/users/editUsername`, {
             method: 'PUT',
             headers: {
@@ -31,6 +36,7 @@ const useUsers = () => {
         })
         const json = await response.json()
         if (!response.ok) {
+            setIsLoading(false)
             if (!json.errorMessage) navigate('/InternalServerErr')
             else {
                 setError(json.errorMessage)
@@ -38,12 +44,14 @@ const useUsers = () => {
             }
         }
         else {
+            setIsLoading(false)
             dispatch({ type: 'EDIT', payload: { id: auth.user.id, email: auth.user.email, username: json.username.username, token: auth.user.token } })
             setError(null)
             setMessage(json.message)
         }
     }
     const editEmail = async (oldEmail, email) => {
+        setIsLoading(true)
         const response = await fetch(`${BASE_URL}/api/users/editEmail`, {
             method: 'PUT',
             headers: {
@@ -54,6 +62,7 @@ const useUsers = () => {
         })
         const json = await response.json()
         if (!response.ok) {
+            setIsLoading(false)
             if (!json.errorMessage) navigate('/InternalServerErr')
             else {
                 setError(json.errorMessage)
@@ -61,6 +70,7 @@ const useUsers = () => {
             }
         }
         else {
+            setIsLoading(false)
             dispatch({ type: 'EDIT', payload: { id: auth.user.id, email: json.email.email, username: auth.user.email, token: auth.user.token } })
             setError(null)
             setMessage(json.message)
@@ -68,6 +78,7 @@ const useUsers = () => {
     }
 
     const editPassword = async (oldPassword, password) => {
+        setIsLoading(true)
         const response = await fetch(`${BASE_URL}/api/users/editPassword`, {
             method: 'PUT',
             headers: {
@@ -78,6 +89,7 @@ const useUsers = () => {
         })
         const json = await response.json()
         if (!response.ok) {
+            setIsLoading(false)
             if (!json.errorMessage) navigate('/InternalServerErr')
             else {
                 setError(json.errorMessage)
@@ -85,6 +97,7 @@ const useUsers = () => {
             }
         }
         else {
+            setIsLoading(false)
             setError(null)
             setMessage(json.message)
         }
@@ -94,7 +107,7 @@ const useUsers = () => {
     useEffect(() => {
         getUsers()
     }, [getUsers])
-    return { getUsers, editEmail, editPassword, editUsername, error, message, setError, setMessage }
+    return { getUsers, editEmail, editPassword, editUsername, error, message, setError, setMessage, isLoading }
 }
 
 export default useUsers

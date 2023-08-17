@@ -12,21 +12,25 @@ function Navbar() {
     }
     return (
         <nav className='py-5 px-10 flex justify-between items-center w-full z-20'>
-            <h1 className='font-bold' >Welcome To my chat app </h1>
-            {auth.user
-                ?
-                <div className='flex gap-5'>
-                    {!profileIsSelected
-                        ? <Link to='/chat' className='font-bold' onClick={() => setProfileIsSelected(true)}>Chat</Link>
-                        : <Link to='/profile' className='font-bold' onClick={() => setProfileIsSelected(false)}>Profile</Link>}
-                    <div onClick={handleLogout} className='font-bold cursor-pointer' >Logout</div>
-                </div>
-                :
-                <div className='flex gap-5'>
-                    <Link to='/sign' className='font-bold' >Sign in</Link >
-                    <Link to='/login' className='font-bold' >Login</Link >
-                </div>
-            }
+            <div>
+                <Link to='/' className='font-bold'>Home</Link>
+            </div>
+            <div className='justify-end'>
+                {auth.user
+                    ?
+                    <div className='flex gap-5'>
+                        {profileIsSelected
+                            ? <Link to='/chat' className='font-bold' onClick={() => setProfileIsSelected(false)}>Chat</Link>
+                            : <Link to='/profile' className='font-bold' onClick={() => setProfileIsSelected(true)}>Profile</Link>}
+                        <div onClick={handleLogout} className='font-bold cursor-pointer' >Logout</div>
+                    </div>
+                    :
+                    <div className='flex gap-5'>
+                        <Link to='/sign' className='font-bold' >Sign in</Link >
+                        <Link to='/login' className='font-bold' >Login</Link >
+                    </div>
+                }
+            </div>
         </nav >
     )
 }

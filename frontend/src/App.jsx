@@ -30,6 +30,7 @@ function App() {
         <Route path='login' element={auth.user ? <Navigate to='/chat' /> : <Login />} />
         <Route path='sign' element={auth.user ? <Navigate to='/chat' /> : <Sign />} />
         <Route path='chat' element={auth.user ? <Chat /> : <Navigate to='/login' />} />
+        {/* <Route path='chat' element={!auth.user ? <Chat /> : <Navigate to='/login' />} /> */}
         <Route path='profile' element={auth.user ? <Profile /> : <Navigate to='/login' />} />
         <Route path='/' element={<Home />} />
         <Route path='/InternalServerErr' element={<InternalError />} />

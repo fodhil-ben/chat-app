@@ -31,26 +31,33 @@
 }
 
 :root {
-    /* --secondary-color: #89ffd8;
-    --shadow-color: #c6ffec;
-    --main-color: #ddfef3;
-    --text-color: #6ccbab; */
 
-    --shadow-color: #9bafff;
-    --secondary-color: #c6d5ff;
-    --main-color: #eef1ff;
-    --text-color: #6d77e4;
+    --dark-shadow-color: #212529;
+    --white-shadow-color: #616161;
+    --secondary-color: #00141f;
+    --main-color: #e2e2e2;
+    --dark-text-color: #353535;
+    --white-text-color: #e7e7e7;
 }
 
 * {
     box-sizing: border-box;
 }
 
+#popup>button,
 body,
 .Icon {
-    color: var(--text-color);
+    color: var(--dark-text-color);
 }
 
+#welcome,
+#groups,
+#card,
+nav {
+    color: var(--white-text-color);
+}
+
+#profile,
 #mobileSlide,
 footer,
 #home,
@@ -58,11 +65,9 @@ footer,
 #sign,
 #chat,
 #addForm,
-#loginForm>button,
 #popup>button {
     background-color: var(--main-color);
 }
-
 
 
 #card,
@@ -74,34 +79,40 @@ input,
 #EditPopup,
 .searchedUser,
 #loginForm {
+    color: var(--white-text-color);
     background-color: var(--secondary-color);
 }
 
+#processingBtn,
 #searchedUsers,
 #loginform,
 #signform,
 input,
-#signform>button,
-#loginform>button {
+#signForm>button,
+#loginForm>button {
     outline: 0;
     border: 0;
-    box-shadow: 0 0 5px 0px var(--shadow-color);
+    box-shadow: 0 0 5px 0px var(--white-shadow-color);
 }
 
 nav {
+    color: var(--white-text-color);
     height: 70px;
     background-color: var(--secondary-color);
-    box-shadow: 0 0 10px 0px var(--shadow-color);
+    box-shadow: 0 0 10px 0px var(--dark-shadow-color);
 }
 
+#processingBtn,
 #editCard button,
 #card button,
 #welcome>button,
 #signForm>button,
 #loginForm>button,
 #users_list {
-    background-color: var(--shadow-color);
+    background-color: var(--dark-shadow-color);
+    color: var(--white-text-color);
 }
+
 
 .error,
 #cancelIcon,
@@ -111,23 +122,26 @@ nav {
     color: #ee2e6e;
 }
 
+
+
 .message,
 #message {
-    border-color: #60ebc6;
-    color: #60ebc6;
+    border-color: #5ab19a;
+    color: #5ab19a;
 }
 
 .msgLeft,
 .msgRight,
 .elements {
+    color: var(--white-text-color);
     max-width: 110px;
     background-color: var(--secondary-color);
-    box-shadow: 0 0 5px 0px var(--shadow-color);
+    box-shadow: 0 0 5px 0px var(--dark-shadow-color);
 }
 
 .slideElements {
     background-color: var(--secondary-color);
-    box-shadow: 0 0 5px 0px var(--shadow-color);
+    box-shadow: 0 0 5px 0px var(--dark-shadow-color);
 }
 
 .elements {
@@ -180,9 +194,15 @@ nav {
     transform: translateY(-50%);
 }
 
-#users_list,
-#popupError {
-    top: 15%
+
+
+
+#users_list {
+    top: 20%;
+}
+
+.addUserMessage {
+    top: 12%;
 }
 
 #EditPopup {

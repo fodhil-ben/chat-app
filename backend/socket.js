@@ -4,7 +4,7 @@ function InitServer(server) {
     const io = socketIo(server, {
         // pingTimeout
         cors: {
-            origin: "http://localhost:5174"
+            origin: "http://localhost:5173"
         }
     })
     io.on('connection', (socket) => {
@@ -21,7 +21,7 @@ function InitServer(server) {
         //setup 
         socket.on('setup', (user_id) => {
             socket.join(user_id)
-            console.log('connected', user_id)
+            console.log('new user connected: ', user_id)
             // socket.emit('connected')
         })
 
@@ -37,7 +37,7 @@ function InitServer(server) {
 
 
             // socket.in(messageData.group_id).emit("message recieved", messageData)
-
+            console.log(messageData)
             socket.to(messageData.group_id).emit("message received", messageData)
         })
 
