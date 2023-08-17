@@ -5,7 +5,7 @@ function InitServer(server) {
         // pingTimeout
         cors: {
             // origin: "http://localhost:5173"
-            origin: "https://chat-app-i3zg.onrender.com'"
+            origin: "https://chat-app-i3zg.onrender.com"
         }
     })
     io.on('connection', (socket) => {
