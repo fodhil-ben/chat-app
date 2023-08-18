@@ -31,7 +31,7 @@ app.use('/api/users', users)
 app.use('/api/groups', groups)
 app.use('/api/messages', messages)
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname1, "frontend", "dist")))
     app.get("*", (req, res) => {
         res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"))
