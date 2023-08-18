@@ -1,4 +1,2 @@
-
-add -- error handling 
-add - avatar
-deploy
+add -- from in messages
+check chat is Selected

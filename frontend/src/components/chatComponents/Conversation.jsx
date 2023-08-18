@@ -8,6 +8,7 @@ import { formatRelative, subDays } from 'date-fns'
 import { IconContext } from 'react-icons'
 import { RxExit } from 'react-icons/rx'
 import useGroups from '../../hooks/useGroups'
+import { UsersContext } from '../../context/UsersContext'
 
 function Conversation({ chatSelected, setChatSelected }) {
     const targeRef = useRef(null)
@@ -18,6 +19,7 @@ function Conversation({ chatSelected, setChatSelected }) {
     const { messages } = useContext(MessagesContext)
     const [message, setMessage] = useState('')
     const { createMessage } = useMessages()
+    const { users } = useContext(UsersContext)
     const handleSubmit = (e) => {
         e.preventDefault()
         handleSendMsg()
@@ -40,7 +42,12 @@ function Conversation({ chatSelected, setChatSelected }) {
         }
     }, [messages])
 
+    const getUserFromId = (id) => {
+        const { username } = users.find(e => e.id === id)
+        return username
+    }
     useEffect(() => {
+        // console.log(getUserFromId(25))
         getGroups()
         groups.map(e => {
             if (e.group_id === activeGroup) setSelectedGroup(e.group_name)
@@ -61,10 +68,34 @@ function Conversation({ chatSelected, setChatSelected }) {
             </div>
             <div id="convo" ref={targeRef} className='flex flex-grow flex-col gap-5 py-5 px-2 overflow-y-scroll'>
                 {messages && messages.map((e, i) => {
-                    return (<div key={i} className={`${auth.user.id === e.sender_id ? "msgLeft p-3 rounded-2xl gap-2 break-words" : "msgRight p-3 rounded-2xl break-words gap-2"}`}>
-                        <div className=' border-b'>{e.message}</div>
-                        <span className='text-red text-xs self-end mt-5'>{formatRelative(subDays(new Date(e.created_at), 0), new Date())}</span>
-                    </div>)
+                    {
+                        if (auth.user.id === e.sender_id) {
+                            return (<div key={i} className={`msgLeft p-3 rounded-2xl gap-2 break-words`}>
+                                <div >{e.message}</div>
+                                <span className='border-t pt-2 text-xs self-end mt-5 gap-5 flex'>
+                                    {formatRelative(subDays(new Date(e.created_at), 0), new Date())}
+                                </span>
+                            </div>)
+                        }
+                        else {
+                            return (<div key={i} className={`msgRight p-3 rounded-2xl break-words gap-2`}>
+                                <div >{e.message}</div>
+                                <div className='border-t pt-2 text-xs self-end mt-5 gap-1 grid'>
+                                    <span className='font-bold text-md'> From: {getUserFromId(e.sender_id)}</span>
+                                    <span>{formatRelative(subDays(new Date(e.created_at), 0), new Date())}</span>
+                                </div>
+                            </div>)
+                        }
+
+                    }
+
+                    // return (<div key={i} className={`${auth.user.id === e.sender_id ? "msgLeft p-3 rounded-2xl gap-2 break-words" : "msgRight p-3 rounded-2xl break-words gap-2"}`}>
+                    //     <div className=' border-b'>{e.message}</div>
+                    //     <span className='text-xs self-end mt-5 gap-5 flex'>
+                    //         From: {getUserFromId(e.sender_id)}
+                    //         {formatRelative(subDays(new Date(e.created_at), 0), new Date())}
+                    //     </span>
+                    // </div>)
                 })}
             </div>
             <form onSubmit={(e) => { handleSubmit(e) }} className='flex justify-between gap-1'>

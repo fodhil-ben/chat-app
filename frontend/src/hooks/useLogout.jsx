@@ -7,6 +7,9 @@ export const useLogout = () => {
     const logout = () => {
         dispatch({ type: 'LOGOUT', payload: null })
         localStorage.removeItem('user')
+        localStorage.removeItem('activeGroup')
+        localStorage.removeItem('members')
+        localStorage.removeItem('chatIsSelected')
     }
     return { logout }
 }

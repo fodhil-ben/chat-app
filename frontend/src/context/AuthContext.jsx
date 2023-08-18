@@ -16,8 +16,8 @@ export const AuthReducer = (state, action) => {
 }
 
 export default function AuthContextProvider({ children }) {
-    // const BASE_URL = 'http://localhost:3001'
-    const BASE_URL = 'https://chat-app-i3zg.onrender.com'
+    const BASE_URL = 'http://localhost:3001'
+    // const BASE_URL = 'https://chat-app-i3zg.onrender.com'
     const [auth, dispatch] = useReducer(AuthReducer, { user: null })
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'))

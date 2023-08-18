@@ -44,7 +44,7 @@
     box-sizing: border-box;
 }
 
-#add_form,
+#addForm,
 #popup>button,
 body,
 .Icon {
@@ -133,11 +133,17 @@ nav {
 }
 
 .msgLeft,
-.msgRight,
 .elements {
     color: var(--white-text-color);
     max-width: 110px;
     background-color: var(--secondary-color);
+    box-shadow: 0 0 5px 0px var(--dark-shadow-color);
+}
+
+.msgRight {
+    color: var(--white-text-color);
+    background-color: var(--white-shadow-color);
+    max-width: 110px;
     box-shadow: 0 0 5px 0px var(--dark-shadow-color);
 }
 
