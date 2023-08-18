@@ -73,7 +73,6 @@ footer,
 
 
 #card,
-#welcome,
 #signForm,
 input,
 #addForm>button,
@@ -97,6 +96,17 @@ input,
     box-shadow: 0 0 5px 0px var(--white-shadow-color);
 }
 
+#welcome {
+    background-color: var(--dark-text-color);
+    color: var(--white-text-color);
+    box-shadow: 0 0 10px 5px var(--dark-shadow-color);
+}
+
+#welcome>a>button {
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 10px 5px var(--secondary-color);
+}
+
 nav {
     color: var(--white-text-color);
     height: 70px;
@@ -107,7 +117,6 @@ nav {
 #processingBtn,
 #editCard button,
 #card button,
-#welcome>button,
 #signForm>button,
 #loginForm>button,
 #users_list {
