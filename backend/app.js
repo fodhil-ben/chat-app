@@ -18,9 +18,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 app.use(cors({
-    // origin: ['http://localhost:5174', 'http://localhost:3001', 'http://localhost:5173']
-    // origin: 'http://localhost:5173'
-    origin: 'https://chat-app-i3zg.onrender.com'
+    origin: process.env.NODE_ENV !== 'production' ? "http://localhost:5173" : "https://chat-app-i3zg.onrender.com"
 }))
 
 
@@ -33,7 +31,7 @@ app.use('/api/users', users)
 app.use('/api/groups', groups)
 app.use('/api/messages', messages)
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV !== 'production') {
     app.use(express.static(path.join(__dirname1, "frontend", "dist")))
     app.get("*", (req, res) => {
         res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"))

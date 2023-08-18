@@ -2,10 +2,8 @@ const socketIo = require('socket.io')
 
 function InitServer(server) {
     const io = socketIo(server, {
-        // pingTimeout
         cors: {
-            // origin: "http://localhost:5173"
-            origin: "*"
+            origin: process.env.NODE_ENV !== 'production' ? "http://localhost:5173" : "https://chat-app-i3zg.onrender.com"
         }
     })
     io.on('connection', (socket) => {

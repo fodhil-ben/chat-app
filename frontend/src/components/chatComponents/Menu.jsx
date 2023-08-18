@@ -9,7 +9,7 @@ import { GroupsContext } from '../../context/GroupsContext';
 import { IconContext } from "react-icons";
 import Popup from './Popup';
 import { UsersContext } from '../../context/UsersContext';
-import ProcessingButton from '../uiComponents/ProcessingButton';
+import { GiCancel } from 'react-icons/gi';
 
 function Menu({ chatSelected, setChatSelected }) {
 

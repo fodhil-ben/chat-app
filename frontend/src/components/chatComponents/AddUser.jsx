@@ -1,7 +1,5 @@
-import React from 'react'
 import { useContext, useEffect, useState } from 'react'
 import useGroups from '../../hooks/useGroups'
-import { AuthenticationContext } from '../../context/AuthContext'
 import { ImCancelCircle } from 'react-icons/im'
 import { IconContext } from 'react-icons'
 import { GroupsContext } from '../../context/GroupsContext'
@@ -9,11 +7,9 @@ import { UsersContext } from '../../context/UsersContext'
 import ProcessingButton from '../uiComponents/ProcessingButton'
 
 function AddUser({ setAddUser }) {
-    const { auth } = useContext(AuthenticationContext)
     const { users } = useContext(UsersContext)
     const [newUser, setNewUser] = useState('')
     const [searchedUsers, setSearchedUsers] = useState(users)
-    // const [error, setError] = useState(null)
     const { addUserToGroup, isLoading, setIsLoading, error, message } = useGroups()
     const { activeGroup } = useContext(GroupsContext)
 
@@ -30,13 +26,9 @@ function AddUser({ setAddUser }) {
 
     const handleAddMember = () => {
         const newUserId = users.filter(e => e.username === newUser)[0]
-        console.log(newUserId.id)
         addUserToGroup(newUserId.id, activeGroup)
         if (!isLoading) {
-            console.log(error)
-            console.log(isLoading)
             if (!error) {
-                // setAddUser(false)
                 setNewUser('')
             } else {
                 setIsLoading(true)

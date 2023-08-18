@@ -1,58 +1,31 @@
-import { AiFillDelete, AiOutlineMenu } from "react-icons/ai"
-import { RiEdit2Fill } from "react-icons/ri"
+import { AiOutlineMenu } from "react-icons/ai"
 import { VscAdd } from "react-icons/vsc"
-import { RxExit } from "react-icons/rx"
 import { IconContext } from "react-icons";
 import { useState, useEffect, useContext } from "react"
 import Popup from "./Popup"
-import useGroups from '../..//hooks/useGroups'
 import { AuthenticationContext } from "../../context/AuthContext";
 import { GroupsContext } from "../../context/GroupsContext";
 import { UsersContext } from "../../context/UsersContext";
 import { GiCancel } from "react-icons/gi";
-import Confirmation from "./Confirmation";
-import EditGroup from "./EditGroup";
+
 import AddUser from "./AddUser";
 
 
-function MobileSlide({ name, chatSelected, setChatSelected }) {
+function MobileSlide({ name, chatSelected }) {
     const [showPopup, setShowPopup] = useState(false)
     const [addUser, setAddUser] = useState(false)
-    const { deleteError, setDeleteError } = useGroups()
     const { auth } = useContext(AuthenticationContext)
-    const { groups, setActiveGroup, activeGroup } = useContext(GroupsContext)
+    const { groups, activeGroup } = useContext(GroupsContext)
     const { users } = useContext(UsersContext)
     const [members, setMembers] = useState([])
-    const [confirmation, setConfirmation] = useState(false)
-    const [deletedGroup, setDeletedGroup] = useState(null)
-    const [editedGroup, setEditedGroup] = useState(null)
-    const [edit, setEdit] = useState(false)
     const [ShowSidebar, setShowSidebar] = useState(false)
     const [searchedUsers, setSearchedUsers] = useState(users)
     const [search, setSearch] = useState('')
 
-
-    const handleEditIcon = (e, g) => {
-        e.stopPropagation()
-        setEdit(true)
-        setEditedGroup(g)
+    const handleSubmit = (e) => {
+        e.preventDefault()
     }
 
-    const handleDeleteIcon = (e, g) => {
-        e.stopPropagation()
-        setConfirmation(true)
-        setDeletedGroup(g)
-    }
-    const handleExit = () => {
-        setChatSelected(!chatSelected)
-        setActiveGroup(null)
-    }
-
-    const handleGroup = (g) => {
-        setChatSelected(!chatSelected)
-        setActiveGroup(g.group_id)
-
-    }
     useEffect(() => {
         localStorage.setItem('chatIsSelected', chatSelected)
         localStorage.setItem('activeGroup', activeGroup)
@@ -79,36 +52,40 @@ function MobileSlide({ name, chatSelected, setChatSelected }) {
         setMembers(storedMembers);
     }, []);
 
+    useEffect(() => {
+        const searched = users.filter((e) => { return e.username.startsWith(search) && search.length > 0 })
+        setSearchedUsers(searched)
+    }, [search, users])
+
     return (
         <>
             <button onClick={() => setShowSidebar(!ShowSidebar)} className="absolute left- top-5 z-50 font-bold text-5xl pr-2 md:hidden"><AiOutlineMenu></AiOutlineMenu></button>
             <div id="mobileSlide" className={ShowSidebar ? 'flex md:hidden pt-3 flex-col flex-grow border-r px-2 border-r-white z-40 w-full absolute left-0' : ' md:hidden hidden flex-col flex-grow border-r px-2 pt-3 border-r-white z-40 w-11/12 absolute left-0'}>
-                <header className='border-b border-b-white border-b-solid p-2 pb-1 flex items-center'>
+                <header className='border-b border-b-white border-b-solid justify-between p-2 px-5 pb-1 flex items-center gap-5'>
                     {!chatSelected
-                        &&
-                        <form onSubmit={(e) => { handleSubmit(e) }} className='flex justify-between md:pr-3 pb-2 flex-grow'>
+                        ?
+                        <form onSubmit={(e) => { handleSubmit(e) }} className='flex justify-between md:pr-3 flex-grow pb-2  '>
                             <input value={search} type="text" onChange={(e) => { setSearch(e.target.value) }} placeholder='Search a person ...' className='p-4 rounded-2xl w-3/4 flex-grow outline-0' />
                         </form>
-                    }
-                    <h1 className='flex w-full justify-between items-center font-bold text-2xl pb-3 px-5 tracking-wide'>
-                        {name}
-                        <div className="flex flex-col gap-2">
-                            <IconContext.Provider value={{ className: "Icon text-2xl text-white  tracking-wide cursor-pointer" }}>
-                                <VscAdd onClick={() => setAddUser(true)} />
-                            </IconContext.Provider>
-                            <GiCancel className="text-2xl" onClick={() => setShowSidebar(false)} />
-                        </div>
-                    </h1>
+
+                        : <h1 className='flex w-full justify-between items-center font-bold text-2xl pb-3 px-5 tracking-wide'>
+                            {name}</h1>}
+                    <div className="flex flex-col gap-2">
+                        <IconContext.Provider value={{ className: "Icon text-2xl text-white  tracking-wide cursor-pointer" }}>
+                            <VscAdd onClick={() => setAddUser(true)} />
+                        </IconContext.Provider>
+                        <GiCancel className="text-2xl" onClick={() => setShowSidebar(false)} />
+                    </div>
 
 
 
                 </header>
                 <div id='elementsList' className='flex flex-grow flex-col gap-5 p-5 overflow-y-scroll'>
-                    <div className='w-full cursor-pointer slideElements z-10 text-left text-xl tracking-wide rounded-2xl font-bold shadow-md p-3 w-max-full'>
+                    {name === 'members' && <div className='w-full cursor-pointer slideElements z-10 text-left text-xl tracking-wide rounded-2xl font-bold shadow-md p-3 w-max-full'>
                         <div className="break-words inline"> You </div>
                         <div id="make_changes" className="flex gap-3 m-auto justify-end ">
                         </div>
-                    </div>
+                    </div>}
 
                     {!chatSelected && searchedUsers.length > 0 && <div id="users" className='m-auto w-full flex flex-col gap-4 p-5 rounded-2xl overflow-scroll h-full'>
                         {searchedUsers.length > 0 && searchedUsers.map((e, i) => {
@@ -128,8 +105,6 @@ function MobileSlide({ name, chatSelected, setChatSelected }) {
                 {showPopup && (
                     <Popup setShowPopup={setShowPopup} users={users} />
                 )}
-                {confirmation && <Confirmation setConfirmation={setConfirmation} deletedGroup={deletedGroup} />}
-                {edit && <EditGroup setEdit={setEdit} setEditedGroup={setEditedGroup} editedGroup={editedGroup} />}
                 {addUser && <AddUser setAddUser={setAddUser} />}
             </div >
         </>

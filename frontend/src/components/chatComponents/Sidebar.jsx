@@ -1,12 +1,9 @@
 
-import { RxExit } from "react-icons/rx"
 import { IconContext } from "react-icons";
 import { useState, useEffect, useContext } from "react"
-import Popup from "./Popup"
 import { AuthenticationContext } from "../../context/AuthContext";
 import { GroupsContext } from "../../context/GroupsContext";
 import { UsersContext } from "../../context/UsersContext";
-import { GiCancel } from "react-icons/gi";
 import useGroups from "../../hooks/useGroups";
 import { VscAdd } from "react-icons/vsc"
 import AddUser from "./AddUser";
@@ -14,15 +11,15 @@ import AddUser from "./AddUser";
 
 
 
-function Sidebar({ name, chatSelected, setChatSelected }) {
+function Sidebar({ name }) {
     const { auth } = useContext(AuthenticationContext)
     const { users } = useContext(UsersContext)
     const [members, setMembers] = useState([])
     const [addUser, setAddUser] = useState(false)
-    const { setActiveGroup, activeGroup } = useContext(GroupsContext)
+    const { activeGroup } = useContext(GroupsContext)
 
     const [searchedUsers, setSearchedUsers] = useState(users)
-    const { groups, getGroups, deleteError, setDeleteError } = useGroups()
+    const { groups, } = useGroups()
     const [search, setSearch] = useState('')
 
 

@@ -13,9 +13,8 @@ function Conversation({ chatSelected, setChatSelected }) {
     const targeRef = useRef(null)
     const { auth } = useContext(AuthenticationContext)
     const { activeGroup, setActiveGroup } = useContext(GroupsContext)
-    const { groups, getGroups, isLoading } = useGroups()
+    const { groups, getGroups } = useGroups()
     const [selectedGroup, setSelectedGroup] = useState('')
-    const [SubmitMessages, setSubmitMessage] = useState(false)
     const { messages } = useContext(MessagesContext)
     const [message, setMessage] = useState('')
     const { createMessage } = useMessages()
@@ -32,7 +31,6 @@ function Conversation({ chatSelected, setChatSelected }) {
 
 
     const handleSendMsg = () => {
-        setSubmitMessage(true)
         createMessage(auth.user.id, activeGroup, message)
         setMessage('')
     }

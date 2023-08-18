@@ -44,12 +44,14 @@
     box-sizing: border-box;
 }
 
+#add_form,
 #popup>button,
 body,
 .Icon {
     color: var(--dark-text-color);
 }
 
+#elementsList,
 #welcome,
 #groups,
 #card,

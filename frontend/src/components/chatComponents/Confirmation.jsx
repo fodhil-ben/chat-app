@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { GiCancel, GiConfirmed } from 'react-icons/gi'
 import { AuthenticationContext } from '../../context/AuthContext'
 import useGroups from '../../hooks/useGroups'

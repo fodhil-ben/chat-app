@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { AuthenticationContext } from '../context/AuthContext'
-import { json, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { GroupsContext } from '../context/GroupsContext'
 
 const useGroups = () => {
@@ -14,7 +14,7 @@ const useGroups = () => {
     if (!context) {
         throw Error('GroupContext must be used inside an WorkoutsContextProvider')
     }
-    const { groups, dispatch, activeGroup } = context
+    const { groups, dispatch } = context
     const [deleteError, setDeleteError] = useState(null)
     const getGroups = async () => {
         setIsLoading(true)
@@ -50,7 +50,6 @@ const useGroups = () => {
                 setIsLoading(false)
             }
             else {
-                console.log(json.messageError)
                 setDeleteError(json.messageError)
                 setIsLoading(false)
             }
@@ -73,7 +72,6 @@ const useGroups = () => {
         })
         const json = await response.json()
 
-        console.log(json)
         if (!response.ok) {
             setIsLoading(false)
             if (!json.messageError) navigate('/InternalServerErr')
@@ -100,7 +98,6 @@ const useGroups = () => {
         })
         const json = await response.json()
 
-        console.log(json)
         if (!response.ok) {
             setIsLoading(false)
             if (!json.messageError) navigate('/InternalServerErr')

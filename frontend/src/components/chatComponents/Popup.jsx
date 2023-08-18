@@ -47,8 +47,6 @@ export default function Popup({ setShowPopup, users }) {
         } else {
             setIsLoading(true)
         }
-        console.log(isLoading)
-        console.log(deleteError)
     }
 
 

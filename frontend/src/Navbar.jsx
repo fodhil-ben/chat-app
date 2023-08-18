@@ -13,7 +13,7 @@ function Navbar() {
     return (
         <nav className='py-5 px-10 flex justify-between items-center w-full z-20'>
             <div>
-                <Link to='/' className='font-bold'>Home</Link>
+                <Link to='/' className='font-bold pl-10'>Home</Link>
             </div>
             <div className='justify-end'>
                 {auth.user
